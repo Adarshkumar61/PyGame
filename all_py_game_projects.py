@@ -1,28 +1,29 @@
-import pygame as py 
-import sys
+# import pygame as py 
+# import sys
 
-py.init()
+# py.init()
 
-screen_width = 800
-screen_height = 600
+# screen_width = 800
+# screen_height = 600
 
-screen = py.display.set_mode((screen_width, screen_height))
-py.display.set_caption('my first window')
+# screen = py.display.set_mode((screen_width, screen_height))
+# py.display.set_caption('my first window')
 
-running = True
-while running:
-    for event in py.event.get():
-        if event.type == py.QUIT:
-            running = False
-    screen.fill((155, 120, 255))
-    py.display.flip()
+# running = True
+# while running:
+#     for event in py.event.get():
+#         if event.type == py.QUIT:
+#             running = False
+#     screen.fill((155, 120, 255))
+#     py.display.flip()
     
-py.quit()
-sys.exit()
+# py.quit()
+# sys.exit()
 
 #rectange movement:
 import pygame
 import sys
+import numpy as np
 
 # Initialize pygame
 pygame.init()
@@ -33,12 +34,12 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Move Rectangle with Arrow Keys")
 
 # Define colors
-WHITE = (255, 255, 255)
+Black = (0, 0, 0)
 RED = (255, 0, 0)
 
 # Define player size and position
-player_x = 100
-player_y = 100
+player_x = np.random.randint(20, 500) 
+player_y = np.random.randint(20, 500)
 player_width = 50
 player_height = 50
 player_speed = 5  # Speed of movement
@@ -66,7 +67,7 @@ while running:
         player_y += player_speed
 
     # Fill screen background
-    screen.fill(WHITE)
+    screen.fill(Black)
 
     # Draw the player rectangle
     pygame.draw.rect(screen, RED, (player_x, player_y, player_width, player_height))
