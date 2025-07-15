@@ -85,30 +85,35 @@
 # sys.exit()
 
 
-import pygame as py
-import sys
+# this is code of player vs enemy where:
+# player is rectange
+# enemy is circle
+
 import numpy as np
+import sys
+import pygame as py
 
 py.init()
 
-width, height = 800, 600
+width = 800
+height = 600
+
 screen = py.display.set_mode((width, height))
-py.display.set_caption('Player_vs Enemy')
+py.display.set_caption('Player_enemy')
 
-
-# colors:
-black = (0, 0, 255)
+# color:
+black = (0, 0, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 
-# player:
-p_x = np.random.randint(50, 500)
-p_y = np.random.randint(50, 500)
-p_w = 50
+#player:
+p_x = np.random.randint(50, 550)
+p_y = np.random.randint(50, 550)
 p_h = 50
+p_w = 50
 p_m = 5
 
-#enemy:
+# enemy:
 e_x = np.random.randint(50, 550)
 e_y = np.random.randint(50, 550)
 e_r = 25
@@ -117,9 +122,38 @@ running = True
 while running:
     py.time.delay(10)
     for event in py.event.get():
-        if event.key == py.QUIT:
+        if event.type == py.QUIT:
             running = False
-        if py.key.get_pressed():
-            if event.type == py.K_b:
+        if event.type == py.KEYDOWN:
+            if event.key == py.K_b:
                 running = False
     
+    key = py.key.get_pressed()
+    
+    if key[py.K_LEFT] and p_x > 0:
+        p_x -= p_m
+    if key[py.K_RIGHT] and p_x + p_w < width:
+        p_x += p_m
+    if key[py.K_UP] and p_y > 0:
+        p_y-= p_m 
+    if key[py.K_DOWN] and p_y + p_h < height:
+        p_y += p_m
+    
+    screen.fill(black)
+    py.draw.rect(screen, blue, (p_x, p_y, p_w, p_h))
+    py.draw.circle(screen, red,(e_x, e_y), e_r)
+    
+    closest_x = max(p_x, min(e_x, p_x + p_w))
+    closest_y = max(p_y, min(e_y, p_y + p_h))
+    
+    dx = e_x - closest_x
+    dy = e_y - closest_y
+    
+    sq = dx * dx + dy * dy
+    if sq <= e_r * e_r:
+        print('Collision Happened')
+        running = False
+    py.display.flip()
+
+py.quit()
+sys.exit()
