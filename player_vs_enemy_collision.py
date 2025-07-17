@@ -117,7 +117,7 @@ p_m = 5
 e_x = np.random.randint(50, 550)
 e_y = np.random.randint(50, 550)
 e_r = 25
-
+e_m = 5
 running = True
 while running:
     py.time.delay(10)
@@ -129,7 +129,15 @@ while running:
                 running = False
     
     key = py.key.get_pressed()
-    
+    # Simple enemy movement: move towards the player
+    if e_x < p_x:
+        e_x += e_m
+    if e_x > p_x:
+        e_x -= e_m
+    if e_y < p_y:
+        e_y += e_m
+    if e_y > p_y:
+        e_y -= e_m
     if key[py.K_LEFT] and p_x > 0:
         p_x -= p_m
     if key[py.K_RIGHT] and p_x + p_w < width:
@@ -140,7 +148,7 @@ while running:
         p_y += p_m
     
     screen.fill(black)
-    py.draw.rect(screen, blue, (p_x, p_y, p_w, p_h))
+    py.draw.rect(screen, blue, (p_x, p_y, p_w, p_h), border_top_left_radius= 10, border_bottom_right_radius= 10)
     py.draw.circle(screen, red,(e_x, e_y), e_r)
     
     closest_x = max(p_x, min(e_x, p_x + p_w))
