@@ -407,6 +407,7 @@
 # sys.exit()
 
 
+<<<<<<< HEAD
 # import pygame as py
 # import sys
 # import math
@@ -574,3 +575,134 @@ while running:
     py.draw.rect(screen, (255, 0, 0), (player_x, player_y, p_width, p_height))  # Draw the player rectangle
     py.display.flip()  # Update the display 
 sys.exit()
+=======
+import pygame as py
+import sys
+import math
+import random
+
+# Init
+py.init()
+WIDTH, HEIGHT = 800, 600
+screen = py.display.set_mode((WIDTH, HEIGHT))
+py.display.set_caption("Shooting Game - Player vs Enemy")
+
+# Colors
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)     # Player
+GREEN = (0, 255, 0)   # Enemy
+BLUE = (0, 0, 255)    # Player Bullet
+YELLOW = (255, 255, 0) # Enemy Bullet
+WHITE = (255, 255, 255)
+
+# Fonts
+font = py.font.SysFont("Arial", 24)
+
+# Player (Rectangle)
+player_x = 100
+player_y = 500
+player_w = 50
+player_h = 50
+player_speed = 5
+
+# Enemy (Circle)
+enemy_x = 400
+enemy_y = 100
+enemy_radius = 30
+enemy_speed = 2
+
+# Bullets
+player_bullets = []     # [x, y]
+enemy_bullets = []      # [x, y]
+bullet_speed = 7
+enemy_bullet_speed = 4
+enemy_fire_delay = 60   # frames between shots
+enemy_fire_timer = 0
+
+# Score
+score = 0
+
+running = True
+while running:
+    py.time.delay(10)
+    screen.fill(BLACK)
+
+    for event in py.event.get():
+        if event.type == py.QUIT:
+            running = False
+        # Player fires
+        if event.type == py.KEYDOWN:
+            if event.key == py.K_SPACE:
+                bullet_x = player_x + player_w // 2
+                bullet_y = player_y
+                player_bullets.append([bullet_x, bullet_y])
+
+    # Player Movement
+    keys = py.key.get_pressed()
+    if keys[py.K_LEFT] and player_x > 0:
+        player_x -= player_speed
+    if keys[py.K_RIGHT] and player_x + player_w < WIDTH:
+        player_x += player_speed
+    if keys[py.K_UP] and player_y > 0:
+        player_y -= player_speed
+    if keys[py.K_DOWN] and player_y + player_h < HEIGHT:
+        player_y += player_speed
+
+    # --------- Player Bullets ---------
+    for b in player_bullets:
+        b[1] -= bullet_speed
+    player_bullets = [b for b in player_bullets if b[1] > 0]
+
+    # Collision with Enemy
+    for b in player_bullets:
+        dx = b[0] - enemy_x
+        dy = b[1] - enemy_y
+        if math.hypot(dx, dy) <= enemy_radius:
+            print("Enemy Hit!")
+            player_bullets.remove(b)
+            score += 10
+
+    # --------- Enemy Shoots Back ---------
+    enemy_fire_timer += 1
+    if enemy_fire_timer >= enemy_fire_delay:
+        # Shoot toward player
+        bullet_x = enemy_x
+        bullet_y = enemy_y
+        enemy_bullets.append([bullet_x, bullet_y])
+        enemy_fire_timer = 0
+
+    # Move Enemy Bullets Down
+    for b in enemy_bullets:
+        b[1] += enemy_bullet_speed
+    enemy_bullets = [b for b in enemy_bullets if b[1] < HEIGHT]
+
+    # Collision with Player
+    for b in enemy_bullets:
+        if (player_x < b[0] < player_x + player_w) and (player_y < b[1] < player_y + player_h):
+            print("Player Hit!")
+            enemy_bullets.remove(b)
+
+    # --------- Draw Everything ---------
+    # Player
+    py.draw.rect(screen, RED, (player_x, player_y, player_w, player_h))
+
+    # Enemy
+    py.draw.circle(screen, GREEN, (enemy_x, enemy_y), enemy_radius)
+
+    # Player Bullets
+    for b in player_bullets:
+        py.draw.circle(screen, BLUE, (int(b[0]), int(b[1])), 5)
+
+    # Enemy Bullets
+    for b in enemy_bullets:
+        py.draw.circle(screen, YELLOW, (int(b[0]), int(b[1])), 5)
+
+    # Score
+    score_text = font.render(f"Score: {score}", True, WHITE)
+    screen.blit(score_text, (10, 10))
+
+    py.display.flip()
+
+py.quit()
+sys.exit()
+>>>>>>> ec0bb87fd85222af99c9f74adaabc2e021cdf159
